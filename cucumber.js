@@ -10,7 +10,6 @@ module.exports = {
       'features/step_definitions/**/*.js',
     ],
     format: ['progress-bar', 'json:reports/cucumber-report.json'],
-    paths: ['features/**/*.feature'],
     publishQuiet: true,
     parallel: workers,
   },

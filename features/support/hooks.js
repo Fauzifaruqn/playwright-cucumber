@@ -54,6 +54,14 @@ After(async function ({ result, pickle }) {
     const tracePath = path.join(traceDir, `${safeName}_${timestamp}.zip`);
     await this.context.tracing.stop({ path: tracePath });
     logger.error(`Trace saved: ${tracePath}`);
+
+    // Attach trace to report as downloadable link
+    const traceData = fs.readFileSync(tracePath);
+    this.attach(traceData.toString('base64'), 'base64:application/zip');
+    this.attach(
+      `Trace: npx playwright show-trace ${tracePath}`,
+      'text/plain'
+    );
   } else {
     await this.context.tracing.stop();
   }
@@ -67,6 +75,10 @@ After(async function ({ result, pickle }) {
       const newVideoPath = path.join(videoDir, `${safeName}_${timestamp}.webm`);
       await video.saveAs(newVideoPath);
       logger.error(`Video saved: ${newVideoPath}`);
+
+      // Attach video to report
+      const videoData = fs.readFileSync(newVideoPath);
+      this.attach(videoData, 'video/webm');
     } else {
       await video.delete();
     }
