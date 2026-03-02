@@ -1,0 +1,53 @@
+name: Cucumber Tests
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+env:
+  ENV: staging
+  HEADED: false
+
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        run: npx playwright install chromium --with-deps
+
+      - name: Run Cucumber tests
+        run: npx cucumber-js --tags "not @demo-failure"
+
+      - name: Generate HTML report
+        if: ${{ !cancelled() }}
+        run: node generate-report.js
+
+      - name: Upload HTML report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: cucumber-html-report
+          path: reports/html/
+          retention-days: 30
+
+      - name: Upload failure artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: failure-artifacts
+          path: |
+            reports/screenshots/
+            reports/traces/
+            reports/videos/
+          retention-days: 30

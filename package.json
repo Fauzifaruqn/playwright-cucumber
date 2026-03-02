@@ -1,0 +1,29 @@
+{
+  "name": "saucedemo-cucumber",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx cucumber-js && node generate-report.js",
+    "test:smoke": "npx cucumber-js --tags @smoke && node generate-report.js",
+    "test:negative": "npx cucumber-js --tags @negative && node generate-report.js",
+    "test:failure-demo": "npx cucumber-js --tags @demo-failure && node generate-report.js",
+    "test:serial": "npx cucumber-js --parallel 1 && node generate-report.js",
+    "test:dry": "npx cucumber-js --dry-run",
+    "report": "node generate-report.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^25.3.2",
+    "cross-env": "^10.1.0"
+  },
+  "dependencies": {
+    "@cucumber/cucumber": "^12.7.0",
+    "chai": "^6.2.2",
+    "dotenv": "^17.3.1",
+    "multiple-cucumber-html-reporter": "^3.10.0",
+    "playwright": "^1.58.2"
+  }
+}
